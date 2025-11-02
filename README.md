@@ -4,6 +4,7 @@
 ![Build](https://github.com/harshagarwal2245/FerrisPizza/actions/workflows/ci.yml/badge.svg)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)]()
 ---
+FerrisPizza is a modular Rust-based pizza ordering system featuring a billing engine, extensible pizza customization, order history, and integrated payment processing. The project demonstrates idiomatic Rust application structure along with clean architectural practices — including the Decorator pattern for flexible pizza add-ons and the Adapter pattern for plugging in different payment providers — allowing future extensions without changing core logic
 
 ##  Problem Statement
 
@@ -13,6 +14,7 @@ Build a modular, testable, and extensible **pizza ordering system in Rust** that
 - Paying for orders using **payment adapters**
 - CLI-based interaction  
 - Clean architecture, SOLID principles & design patterns
+- 
 
 ---
 
