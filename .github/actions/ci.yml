@@ -1,0 +1,60 @@
+name: CI-CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [stable]
+    steps:
+      #  Checkout code
+      - uses: actions/checkout@v3
+
+      #  Setup Rust
+      - uses: actions-rs/toolchain@v1
+        with: 
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+
+      #  Build dev and release binaries
+      - name: Build Dev
+        run: cargo build
+
+      - name: Build Release
+        run: cargo build --release
+
+      #  Run tests
+      - name: Run Tests
+        run: cargo test -- test
+
+      #  Create release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}  # Use your PAT here
+        with:
+          tag_name: ${{ github.ref_name }}   # You can update manually or generate dynamically
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Automated release of FerrisPizza
+            - Dev/Release binaries built
+            - Tested & ready for use
+
+      # 6️⃣ Upload release binary
+      - name: Upload Release Asset
+        id: upload_asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/release/ferrispizza_cli
+          asset_name: FerrisPizza
+          asset_content_type: application/octet-stream

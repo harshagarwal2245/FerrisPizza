@@ -1,0 +1,23 @@
+[package]
+name = "ferrispizza_cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ferrispizza_lib = { path = "../ferrispizza_lib" }
+
+[profile.dev]
+opt-level = 0          # No optimizations for fast builds
+debug = true           # Full debug info
+overflow-checks = true # Extra safety in dev
+panic = "unwind"       # Enable backtraces, better debugging
+incremental = true     # Faster incremental builds
+
+[profile.release]
+opt-level = 3          # Maximum optimization
+debug = false          # Smaller binary (we can switch to true for perf profiling)
+overflow-checks = false
+lto = "fat"            # Link Time Optimization (best performance)
+codegen-units = 1      # Single unit for maximum optimization
+panic = "abort"        # Smaller & faster binary
+strip = true           # Remove symbols (minimize size)
